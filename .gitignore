@@ -1,0 +1,25 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Results and runs
+results/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+
+# IDE and OS
+.idea/
+.vscode/
+.DS_Store
+
+# Playwright
+playwright-report/
+test-results/
