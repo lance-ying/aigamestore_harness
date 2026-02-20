@@ -36,7 +36,7 @@ The script loads `.env` from the script directory automatically.
 Serve the games (e.g. at `http://localhost:8000`), then run the harness with **--model** and **--url** (full game URL).
 
 ```bash
-python run_llm_eval.py --model openai:gpt-4o --url http://localhost:8000/games/doodle-hopper
+python run_llm_eval.py --model openai:gpt-5 --url http://aigamestore.org/game1
 ```
 
 **Arguments:**
