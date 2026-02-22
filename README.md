@@ -95,7 +95,7 @@ Contents include:
 1. The script opens a Chromium page, navigates to the game URL, and locates the game canvas (`#defaultCanvas0` or similar).
 2. It reads the on-page **game description** and **controls** (e.g. `#gameDescription`, `#gameControls`) and injects them into the prompt.
 3. It captures a screenshot, pauses the game (ESC), and sends the last step’s result frames plus the current frame and a scratchpad to the LLM.
-4. The model responds with `<keys>...</keys>` (five segments of 0.2s each) and optional `<scratchpad>...</scratchpad>`. The harness parses the keys, resumes the game, and executes each segment (instant and HOLD actions).
+4. The model responds with `<keys>...</keys>` (five segments of 0.2s each) and `<scratchpad>...</scratchpad>`. The harness parses the keys, resumes the game, and executes each segment (instant and HOLD actions).
 5. When the game signals an end state, the harness sends R + Enter to restart and continues until `--max_seconds` API calls are reached or the run is stopped.
 
 ## Project layout
@@ -106,13 +106,6 @@ Contents include:
 - **utils/** – Parsing (`parsing_utils`), gameplay helpers (`gameplay_utils`, `game_utils`), LLM utilities (`llm_interface_utils/`).
 - **prompts/** – Prompt template (`prompt.md`) with placeholders for game description, controls, scratchpad, etc.
 - **results/** – Run output (screenshots, gameplay logs, GIFs); created per run, gitignored.
-
-## Troubleshooting
-
-- **Canvas not found:** Ensure the game page exposes a canvas with id `defaultCanvas0` (or that the script’s fallback locators match your page).
-- **Missing score / game end:** The script reads game state from the iframe when present (`document.querySelector('iframe').contentWindow.getGameState()`). If your game uses different globals, you may need to adapt the evaluation in `run_llm_eval.py`.
-- **Rate limits:** Space out runs or reduce concurrency; use the provider’s recommended retries/backoff if you add retry logic.
-- **API errors:** Check `.env` and that the model name matches the provider’s API (e.g. `google:gemini-2.0-flash`).
 
 ## License
 
