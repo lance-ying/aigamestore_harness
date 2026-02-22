@@ -1,13 +1,13 @@
 # AI Gamestore Harness
 
-A harness to run vision-language models (VLMs) on [AI Gamestore](https://aigamestore.com) games. The runner uses Playwright to drive a browser, captures game frames, sends them to a supported LLM provider for actions, and executes the returned key presses in the game. Results (screenshots, gameplay logs, GIFs) are saved under `results/`.
+A harness to run vision-language models (VLMs) on [AI Gamestore](https://aigamestore.org) games. The runner uses Playwright to drive a browser, captures game frames, sends them to a supported LLM provider for actions, and executes the returned key presses in the game. Results (screenshots, gameplay logs, GIFs) are saved under `results/`.
 
 ## Prerequisites
 
 - **Python 3.10+**
 - **Playwright** (Chromium): `playwright install chromium`
 - **API keys** for at least one provider (see [Environment](#environment))
-- Games served at a URL the harness can reach (e.g. local server or AI Gamestore)
+- Games are in the **games** folder. You can serve them locally or use the live site.
 
 ## Installation
 
@@ -33,10 +33,28 @@ The script loads `.env` from the script directory automatically.
 
 ## Usage
 
-Serve the games (e.g. at `http://localhost:8000`), then run the harness with **--model** and **--url** (full game URL).
+Run the harness with **--model** and **--url** (full game URL).
+
+**Option 1 – Serve games locally**  
+Games are in the `games` folder. From the project root, run:
 
 ```bash
-python run_llm_eval.py --model openai:gpt-5 --url http://aigamestore.org/game1
+python -m http.server 8000
+```
+
+Then use the appropriate URL in the command (e.g. `http://localhost:8000/games/game1`).
+
+**Option 2 – Use the live site**  
+You can point **--url** directly at the website:
+
+```bash
+python run_llm_eval.py --model openai:gpt-4o --url https://aigamestore.org/game1
+```
+
+**Example (local):**
+
+```bash
+python run_llm_eval.py --model openai:gpt-4o --url http://localhost:8000/games/game1
 ```
 
 **Arguments:**
@@ -82,10 +100,12 @@ Contents include:
 
 ## Project layout
 
-- **vlm_fixed.py** – Main entrypoint (Playwright + LLM loop).
+- **run_llm_eval.py** – Main entrypoint (Playwright + LLM loop).
+- **games/** – Game assets (game1–game10); serve with `python -m http.server 8000` or use the live site.
 - **llm_interface/api/** – Provider-specific APIs (OpenAI, Anthropic, Google, Together, xAI).
-- **utils/** – Parsing, gameplay helpers, logging, token/config utilities.
-- **prompts/** – Markdown prompts (e.g. `prompt.md`).
+- **utils/** – Parsing (`parsing_utils`), gameplay helpers (`gameplay_utils`, `game_utils`), LLM utilities (`llm_interface_utils/`).
+- **prompts/** – Prompt template (`prompt.md`) with placeholders for game description, controls, scratchpad, etc.
+- **results/** – Run output (screenshots, gameplay logs, GIFs); created per run, gitignored.
 
 ## Troubleshooting
 
